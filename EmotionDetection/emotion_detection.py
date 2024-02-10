@@ -10,14 +10,11 @@ def emotion_detector(text_to_analyse: str):
     }
     res = None
     
-    try:
-        res = requests.post(**req_data)
-    except HTTPError as http_error:
-        print(f"HTTP error that occurred {http_error}")
-    except Exception as error:
-        print(f"Another error occurred: {error}")
-    else:
-        emotion_responses = res.json()["emotionPredictions"][0]["emotion"]
-        highest_emotion_response = max((emotion_responses[emot], emot) for emot in emotion_responses)
-        output = {**emotion_responses, "dominant_emotion": highest_emotion_response[1]}
-        return output
+    if res.status_code == 400:
+        return {"anger": None, "disgust": None, "fear": None, "joy": None, "sadness": None, "dominant_emotion": None} 
+    
+    res = requests.post(**req_data)
+    
+    emotion_responses = res.json()["emotionPredictions"][0]["emotion"]
+    highest_emotion_response = max((emotion_responses[emot], emot) for emot in emotion_responses)
+    return {**emotion_responses, "dominant_emotion": highest_emotion_response[1]}

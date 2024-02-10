@@ -8,9 +8,8 @@ def emot_detector():
     req = request.args.get("text_to_analyse")
     res = emotion_detector(req)
     
-    if res.status_code == 400:
-        return {"anger": None, "disgust": None, "fear": None, "joy": None, "sadness": None, "dominant_emotion": None}
-    elif res["dominant_emotion"] is None:
+    
+    if res["dominant_emotion"] is None:
         return "Invalid Text! Please try again"
     
     return f"""
